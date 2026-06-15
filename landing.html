@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEI Financeiro — CNPJ e CPF sob controle</title>
+<meta name="description" content="Controle financeiro completo para MEI. Lançamentos, relatórios, agenda de vencimentos e muito mais. Tudo em um só lugar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0E1720;
+    --bg2: #131f2b;
+    --card: #172030;
+    --verde: #00C48C;
+    --ouro: #C9A84C;
+    --texto: #F0F4F8;
+    --texto2: #8A9BB0;
+    --borda: rgba(255,255,255,.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--texto);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .9rem 1.5rem;
+    background: rgba(14,23,32,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--borda);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.25rem; font-weight: 800; letter-spacing: -.5px;
+    color: var(--verde); text-decoration: none;
+  }
+  .nav-logo span { color: var(--texto); }
+  .nav-cta {
+    background: var(--verde); color: #0E1720;
+    border: none; border-radius: 10px;
+    padding: .55rem 1.2rem; font-size: .85rem; font-weight: 700;
+    cursor: pointer; text-decoration: none;
+    transition: opacity .2s;
+  }
+  .nav-cta:hover { opacity: .85; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 7rem 1.5rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(0,196,140,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: rgba(0,196,140,.1); border: 1px solid rgba(0,196,140,.25);
+    color: var(--verde); border-radius: 20px;
+    padding: .35rem .9rem; font-size: .78rem; font-weight: 700;
+    margin-bottom: 1.5rem; letter-spacing: .3px;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 7vw, 4rem);
+    font-weight: 800; line-height: 1.1;
+    letter-spacing: -1.5px;
+    max-width: 700px; margin-bottom: 1.2rem;
+  }
+  .hero h1 em {
+    font-style: normal; color: var(--verde);
+  }
+  .hero p {
+    color: var(--texto2); font-size: 1.05rem;
+    max-width: 520px; margin-bottom: 2.2rem; line-height: 1.7;
+  }
+  .hero-btns {
+    display: flex; gap: .8rem; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 3rem;
+  }
+  .btn-primary {
+    background: var(--verde); color: #0E1720;
+    border: none; border-radius: 12px;
+    padding: .85rem 2rem; font-size: 1rem; font-weight: 700;
+    cursor: pointer; text-decoration: none;
+    transition: transform .15s, opacity .15s;
+    display: inline-flex; align-items: center; gap: .5rem;
+  }
+  .btn-primary:hover { transform: translateY(-2px); opacity: .9; }
+  .btn-secondary {
+    background: transparent; color: var(--texto2);
+    border: 1px solid var(--borda); border-radius: 12px;
+    padding: .85rem 1.8rem; font-size: 1rem; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: border-color .2s, color .2s;
+    display: inline-flex; align-items: center; gap: .5rem;
+  }
+  .btn-secondary:hover { border-color: var(--verde); color: var(--verde); }
+
+  /* App preview mockup */
+  .hero-mockup {
+    width: 100%; max-width: 320px;
+    background: var(--card);
+    border: 1px solid var(--borda);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,.5);
+    margin: 0 auto;
+  }
+  .mockup-bar {
+    background: #0E1720;
+    padding: .7rem 1rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--borda);
+  }
+  .mockup-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: .9rem; font-weight: 800; color: var(--verde);
+  }
+  .mockup-body { padding: 1rem; }
+  .mockup-greeting {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem; font-weight: 800; margin-bottom: .15rem;
+  }
+  .mockup-greeting span { color: var(--verde); }
+  .mockup-sub { font-size: .7rem; color: var(--texto2); margin-bottom: .8rem; }
+  .mockup-card {
+    background: rgba(0,196,140,.08);
+    border: 1px solid rgba(0,196,140,.2);
+    border-radius: 14px; padding: .8rem;
+    margin-bottom: .6rem;
+  }
+  .mockup-label { font-size: .6rem; color: var(--verde); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; margin-bottom: .3rem; }
+  .mockup-value { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 900; color: var(--verde); }
+  .mockup-teto { font-size: .62rem; color: var(--texto2); margin-top: .2rem; }
+  .mockup-bar-prog {
+    height: 5px; background: rgba(255,255,255,.08);
+    border-radius: 3px; margin-top: .5rem; overflow: hidden;
+  }
+  .mockup-bar-fill {
+    height: 100%; width: 22%; background: var(--verde); border-radius: 3px;
+  }
+  .mockup-card2 {
+    background: rgba(45,100,200,.08);
+    border: 1px solid rgba(45,100,200,.2);
+    border-radius: 14px; padding: .8rem;
+  }
+  .mockup-label2 { font-size: .6rem; color: #7aaeff; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; margin-bottom: .3rem; }
+  .mockup-value2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 900; color: #7aaeff; }
+
+  /* ── SECTIONS ── */
+  section { padding: 5rem 1.5rem; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  .section-label {
+    font-size: .72rem; font-weight: 700; color: var(--verde);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    margin-bottom: .6rem;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800; line-height: 1.15;
+    letter-spacing: -.5px; margin-bottom: .8rem;
+  }
+  .section-title em { font-style: normal; color: var(--verde); }
+  .section-desc {
+    color: var(--texto2); font-size: .95rem;
+    max-width: 560px; line-height: 1.7; margin-bottom: 3rem;
+  }
+
+  /* ── TIPOS DE MEI ── */
+  .tipos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: .8rem;
+  }
+  .tipo-card {
+    background: var(--card);
+    border: 1px solid var(--borda);
+    border-radius: 16px; padding: 1.2rem 1rem;
+    text-align: center;
+    transition: border-color .2s, transform .2s;
+  }
+  .tipo-card:hover { border-color: var(--verde); transform: translateY(-3px); }
+  .tipo-emoji { font-size: 1.8rem; margin-bottom: .5rem; }
+  .tipo-nome { font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 700; margin-bottom: .3rem; }
+  .tipo-desc { font-size: .72rem; color: var(--texto2); line-height: 1.4; }
+
+  /* ── FUNCIONALIDADES ── */
+  .feat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .feat-card {
+    background: var(--card);
+    border: 1px solid var(--borda);
+    border-radius: 18px; padding: 1.5rem;
+    transition: border-color .2s;
+  }
+  .feat-card:hover { border-color: rgba(0,196,140,.3); }
+  .feat-icon {
+    font-size: 1.6rem; margin-bottom: .8rem;
+    display: block;
+  }
+  .feat-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem; font-weight: 800; margin-bottom: .4rem;
+  }
+  .feat-desc { font-size: .83rem; color: var(--texto2); line-height: 1.6; }
+
+  /* ── DEPOIMENTOS ── */
+  .dep-section { background: var(--bg2); }
+  .dep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .dep-card {
+    background: var(--card);
+    border: 1px solid var(--borda);
+    border-radius: 18px; padding: 1.5rem;
+  }
+  .dep-stars { color: var(--ouro); font-size: .85rem; margin-bottom: .7rem; }
+  .dep-text { font-size: .88rem; color: var(--texto); line-height: 1.65; margin-bottom: 1rem; font-style: italic; }
+  .dep-autor { display: flex; align-items: center; gap: .7rem; }
+  .dep-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(0,196,140,.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .dep-nome { font-size: .82rem; font-weight: 700; }
+  .dep-cargo { font-size: .72rem; color: var(--texto2); }
+
+  /* ── PLANOS ── */
+  .planos-section { background: var(--bg); }
+  .planos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem; align-items: start;
+  }
+  .plano-card {
+    background: var(--card);
+    border: 1.5px solid var(--borda);
+    border-radius: 20px; padding: 1.5rem;
+    position: relative;
+    transition: transform .2s;
+  }
+  .plano-card:hover { transform: translateY(-4px); }
+  .plano-card.destaque {
+    border-color: var(--ouro);
+    background: rgba(201,168,76,.06);
+  }
+  .plano-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--ouro); color: #0E1720;
+    font-size: .62rem; font-weight: 800;
+    padding: .25rem .8rem; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .plano-nome {
+    font-size: .7rem; font-weight: 700; color: var(--texto2);
+    text-transform: uppercase; letter-spacing: .8px; margin-bottom: .5rem;
+  }
+  .plano-valor {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem; font-weight: 900; line-height: 1;
+    margin-bottom: .2rem;
+  }
+  .plano-card.destaque .plano-valor { color: var(--ouro); }
+  .plano-card:not(.destaque) .plano-valor { color: var(--verde); }
+  .plano-cobranca { font-size: .78rem; color: var(--texto2); margin-bottom: .6rem; }
+  .plano-desc { font-size: .8rem; color: var(--texto2); line-height: 1.5; margin-bottom: 1.2rem; min-height: 3rem; }
+  .plano-btn {
+    display: flex; align-items: center; justify-content: center; gap: .4rem;
+    width: 100%; border: none; border-radius: 12px;
+    padding: .85rem; font-size: .88rem; font-weight: 700;
+    cursor: pointer; text-decoration: none;
+    transition: opacity .2s, transform .15s;
+  }
+  .plano-btn:hover { opacity: .88; transform: translateY(-1px); }
+  .plano-card.destaque .plano-btn { background: var(--ouro); color: #0E1720; }
+  .plano-card:not(.destaque) .plano-btn { background: var(--verde); color: #0E1720; }
+
+  /* ── FAQ ── */
+  .faq-section { background: var(--bg2); }
+  .faq-list { max-width: 680px; }
+  .faq-item {
+    border-bottom: 1px solid var(--borda);
+    padding: 1.2rem 0;
+  }
+  .faq-pergunta {
+    font-family: 'Syne', sans-serif;
+    font-size: .95rem; font-weight: 700; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem;
+  }
+  .faq-pergunta::after { content: '+'; color: var(--verde); font-size: 1.3rem; flex-shrink: 0; }
+  .faq-pergunta.open::after { content: '−'; }
+  .faq-resposta {
+    font-size: .85rem; color: var(--texto2);
+    line-height: 1.7; margin-top: .7rem;
+    display: none;
+  }
+  .faq-resposta.open { display: block; }
+
+  /* ── CTA FINAL ── */
+  .cta-section {
+    text-align: center;
+    background: linear-gradient(135deg, #0d2e1a 0%, #0E1720 60%);
+    border-top: 1px solid rgba(0,196,140,.15);
+  }
+  .cta-section .section-title { max-width: 560px; margin: 0 auto 1rem; }
+  .cta-section .section-desc { margin: 0 auto 2rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080f16;
+    border-top: 1px solid var(--borda);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem; font-weight: 800;
+    color: var(--verde); margin-bottom: .5rem;
+  }
+  .footer-logo span { color: var(--texto); }
+  .footer-text { font-size: .78rem; color: var(--texto2); line-height: 1.6; }
+
+  /* ── UTILS ── */
+  .text-verde { color: var(--verde); }
+  .text-ouro { color: var(--ouro); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .hero-btns { flex-direction: column; align-items: center; }
+    .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+    .planos-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">MEI <span>Financeiro</span></a>
+  <a href="#planos" class="nav-cta">Ver planos</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">✦ Controle financeiro para MEI</div>
+  <h1>Seu CNPJ e CPF<br><em>sob controle</em>,<br>tudo em um lugar</h1>
+  <p>Chega de misturar dinheiro pessoal com o negócio. O MEI Financeiro organiza suas finanças, gera relatórios para o contador e avisa quando uma conta está vencendo.</p>
+  <div class="hero-btns">
+    <a href="#planos" class="btn-primary">🚀 Começar agora</a>
+    <a href="#funcionalidades" class="btn-secondary">Ver funcionalidades →</a>
+  </div>
+  <div class="hero-mockup reveal">
+    <div class="mockup-bar">
+      <span class="mockup-logo">MEI Financeiro</span>
+      <span style="font-size:.65rem;color:#8A9BB0">Olá, Maria 👋</span>
+    </div>
+    <div class="mockup-body">
+      <div class="mockup-greeting">Olá, <span>Maria Silva</span> 👋</div>
+      <div class="mockup-sub">MEI Serviço · 2026</div>
+      <div class="mockup-card">
+        <div class="mockup-label">🏪 CNPJ — Negócio</div>
+        <div style="font-size:.6rem;color:#8A9BB0;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.3rem">Faturamento anual</div>
+        <div class="mockup-value">R$ 18.400,00</div>
+        <div class="mockup-teto">Teto: R$ 81.000,00 · 22,7% usado</div>
+        <div class="mockup-bar-prog"><div class="mockup-bar-fill" style="width:22.7%"></div></div>
+      </div>
+      <div class="mockup-card2">
+        <div class="mockup-label2">👤 CPF — Pessoal</div>
+        <div style="font-size:.6rem;color:#8A9BB0;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.3rem">Saldo acumulado</div>
+        <div class="mockup-value2">R$ 4.200,00</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIPOS DE MEI -->
+<section style="background:var(--bg2);padding:4rem 1.5rem;">
+  <div class="container">
+    <div class="section-label reveal">Para todos os tipos de MEI</div>
+    <h2 class="section-title reveal">Não importa o seu negócio,<br><em>o app se adapta a você</em></h2>
+    <p class="section-desc reveal">Cada tipo de MEI tem categorias, alertas e relatórios específicos. O app reconhece o seu perfil e mostra só o que faz sentido para você.</p>
+    <div class="tipos-grid">
+      <div class="tipo-card reveal">
+        <div class="tipo-emoji">🔧</div>
+        <div class="tipo-nome">MEI Serviço</div>
+        <div class="tipo-desc">Designer, cabeleireiro, consultora, diarista e muito mais.</div>
+      </div>
+      <div class="tipo-card reveal">
+        <div class="tipo-emoji">🛒</div>
+        <div class="tipo-nome">MEI Comércio</div>
+        <div class="tipo-desc">Loja, revendedora, mercadinho. Com alerta do limite de compras.</div>
+      </div>
+      <div class="tipo-card reveal">
+        <div class="tipo-emoji">🏭</div>
+        <div class="tipo-nome">MEI Indústria</div>
+        <div class="tipo-desc">Artesã, confecção, alimentos. Controle de insumos incluído.</div>
+      </div>
+      <div class="tipo-card reveal">
+        <div class="tipo-emoji">🔧🛒</div>
+        <div class="tipo-nome">MEI Misto</div>
+        <div class="tipo-desc">Presta serviço e vende produto. Os dois contextos organizados.</div>
+      </div>
+      <div class="tipo-card reveal">
+        <div class="tipo-emoji">🚛</div>
+        <div class="tipo-nome">MEI Caminhoneiro</div>
+        <div class="tipo-desc">Fretes, PX, aplicativos. Teto de R$ 251.600 e controle completo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNCIONALIDADES -->
+<section id="funcionalidades">
+  <div class="container">
+    <div class="section-label reveal">O que você encontra dentro</div>
+    <h2 class="section-title reveal">Tudo que o seu MEI<br><em>precisa em um app</em></h2>
+    <p class="section-desc reveal">Desenvolvido por quem entende de BPO Financeiro para MEI. Cada funcionalidade resolve um problema real do dia a dia.</p>
+    <div class="feat-grid">
+      <div class="feat-card reveal">
+        <span class="feat-icon">💰</span>
+        <div class="feat-title">Lançamentos CNPJ e CPF</div>
+        <div class="feat-desc">Registre entradas, saídas e retiradas separadas por negócio e vida pessoal. Saldo em tempo real, sempre atualizado.</div>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">📅</span>
+        <div class="feat-title">Agenda de Vencimentos</div>
+        <div class="feat-desc">Cadastre DAS, fornecedores e contas a receber. Alertas automáticos: 🟠 4-5 dias, 🟡 0-3 dias e 🔴 atrasado no painel.</div>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">📄</span>
+        <div class="feat-title">Relatórios para o contador</div>
+        <div class="feat-desc">Relatório Anual e Mensal — CNPJ e CPF — com DRE completo. Envie por WhatsApp ou baixe em PDF em segundos.</div>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">📊</span>
+        <div class="feat-title">Controle do Teto MEI</div>
+        <div class="feat-desc">Barra de progresso mostrando o quanto do teto anual você já usou. Nunca mais seja pego de surpresa no limite.</div>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">🧮</span>
+        <div class="feat-title">Simulador de IR</div>
+        <div class="feat-desc">Calcule automaticamente o imposto de renda com base nos seus lançamentos. Separação de rendimentos isentos e tributáveis.</div>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">🛒</span>
+        <div class="feat-title">Alerta de Limite de Compras</div>
+        <div class="feat-desc">Para MEI Comércio, Indústria e Misto: monitora se suas compras estão dentro do limite legal de 80% do faturamento.</div>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">📁</span>
+        <div class="feat-title">Documentos Organizados</div>
+        <div class="feat-desc">Guarde comprovantes e documentos separados por CNPJ e CPF. Tudo disponível na hora de gerar o relatório.</div>
+      </div>
+      <div class="feat-card reveal">
+        <span class="feat-icon">📚</span>
+        <div class="feat-title">Guias MEI incluídos</div>
+        <div class="feat-desc">Explicações sobre DAS, DASN-SIMEI, emissão de nota fiscal e muito mais. Direto dentro do app, sem precisar pesquisar.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="dep-section">
+  <div class="container">
+    <div class="section-label reveal">O que nossos usuários dizem</div>
+    <h2 class="section-title reveal">MEIs que <em>pararam de se perder</em><br>nas finanças</h2>
+    <p class="section-desc reveal">Resultados reais de quem usa o MEI Financeiro no dia a dia.</p>
+    <div class="dep-grid">
+      <div class="dep-card reveal">
+        <div class="dep-stars">★★★★★</div>
+        <div class="dep-text">"Finalmente consigo separar meu CNPJ do meu CPF sem confusão. Antes eu misturava tudo e ficava perdida no final do mês. Agora sei exatamente quanto tenho em cada conta."</div>
+        <div class="dep-autor">
+          <div class="dep-avatar">🚛</div>
+          <div>
+            <div class="dep-nome">Maria Silva</div>
+            <div class="dep-cargo">MEI Caminhoneira · São Paulo</div>
+          </div>
+        </div>
+      </div>
+      <div class="dep-card reveal">
+        <div class="dep-stars">★★★★★</div>
+        <div class="dep-text">"O relatório para o contador me economiza horas todo mês. Antes eu precisava juntar tudo em planilha, agora gero em PDF em segundos e mando pelo WhatsApp."</div>
+        <div class="dep-autor">
+          <div class="dep-avatar">🛒</div>
+          <div>
+            <div class="dep-nome">João Oliveira</div>
+            <div class="dep-cargo">MEI Comércio · Minas Gerais</div>
+          </div>
+        </div>
+      </div>
+      <div class="dep-card reveal">
+        <div class="dep-stars">★★★★★</div>
+        <div class="dep-text">"Os alertas de vencimento me salvaram de pagar DAS atrasado três vezes já! O app avisa com antecedência e quando tenho algum problema no valor, consigo editar na hora."</div>
+        <div class="dep-autor">
+          <div class="dep-avatar">🔧</div>
+          <div>
+            <div class="dep-nome">Ana Ferreira</div>
+            <div class="dep-cargo">MEI Serviço · Rio de Janeiro</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANOS -->
+<section id="planos" class="planos-section">
+  <div class="container">
+    <div class="section-label reveal" style="text-align:center">Planos e preços</div>
+    <h2 class="section-title reveal" style="text-align:center">Escolha o plano<br><em>ideal para você</em></h2>
+    <p class="section-desc reveal" style="text-align:center;margin:0 auto 3rem;">Cancele quando quiser. Seus dados ficam guardados por até 8 meses após o cancelamento.</p>
+    <div class="planos-grid">
+
+      <div class="plano-card reveal">
+        <div class="plano-nome">Mensal</div>
+        <div class="plano-valor">R$ 99,90</div>
+        <div class="plano-cobranca">por mês</div>
+        <div class="plano-desc">Comece agora sem compromisso. Cancele quando quiser, sem burocracia.</div>
+        <a href="https://pay.kiwify.com.br/47827YE" target="_blank" class="plano-btn">🚀 Assinar Mensal</a>
+      </div>
+
+      <div class="plano-card reveal">
+        <div class="plano-nome">Trimestral</div>
+        <div class="plano-valor">R$ 278,70</div>
+        <div class="plano-cobranca">a cada 3 meses</div>
+        <div class="plano-desc">Ideal para quem quer organização por um período sem preocupação mensal.</div>
+        <a href="https://pay.kiwify.com.br/3SkLORe" target="_blank" class="plano-btn">🚀 Assinar Trimestral</a>
+      </div>
+
+      <div class="plano-card reveal">
+        <div class="plano-nome">Semestral</div>
+        <div class="plano-valor">R$ 527,40</div>
+        <div class="plano-cobranca">a cada 6 meses</div>
+        <div class="plano-desc">Meio ano de controle financeiro completo. Tranquilidade por mais tempo.</div>
+        <a href="https://pay.kiwify.com.br/Bl3PHGc" target="_blank" class="plano-btn">🚀 Assinar Semestral</a>
+      </div>
+
+      <div class="plano-card destaque reveal">
+        <div class="plano-badge">⭐ MAIS POPULAR</div>
+        <div class="plano-nome">Anual</div>
+        <div class="plano-valor">R$ 994,80</div>
+        <div class="plano-cobranca">por ano</div>
+        <div class="plano-desc">O melhor custo-benefício. Um ano inteiro organizado, sem preocupação.</div>
+        <a href="https://pay.kiwify.com.br/qLZ9XCQ" target="_blank" class="plano-btn">🚀 Assinar Anual</a>
+      </div>
+
+    </div>
+
+    <!-- Garantias -->
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;margin-top:2.5rem;" class="reveal">
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--texto2)">✅ Acesso imediato após o pagamento</div>
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--texto2)">✅ Dados guardados por 8 meses ao cancelar</div>
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--texto2)">✅ Suporte via WhatsApp</div>
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--texto2)">✅ Cancele quando quiser</div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="container">
+    <div class="section-label reveal">Dúvidas frequentes</div>
+    <h2 class="section-title reveal">Perguntas <em>frequentes</em></h2>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <div class="faq-pergunta" onclick="toggleFaq(this)">O app funciona para qualquer tipo de MEI?</div>
+        <div class="faq-resposta">Sim! O MEI Financeiro suporta 5 tipos: Serviço, Comércio, Indústria, Misto e Caminhoneiro. Cada tipo tem categorias e alertas específicos para o seu negócio.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-pergunta" onclick="toggleFaq(this)">Precisa instalar alguma coisa?</div>
+        <div class="faq-resposta">Não! O MEI Financeiro é um PWA (aplicativo web progressivo). Você acessa pelo navegador do celular e pode adicionar à tela inicial para usar como um app nativo, sem precisar instalar nada.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-pergunta" onclick="toggleFaq(this)">O que acontece com meus dados se eu cancelar?</div>
+        <div class="faq-resposta">Seus dados ficam guardados e seguros por até 8 meses após o cancelamento. Se você reativar a assinatura dentro desse período, tudo volta exatamente como estava.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-pergunta" onclick="toggleFaq(this)">O relatório substitui o contador?</div>
+        <div class="faq-resposta">Não. O MEI Financeiro organiza seus lançamentos e gera relatórios para facilitar o trabalho do seu contador — mas não substitui a orientação de um profissional contábil para declarações oficiais.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-pergunta" onclick="toggleFaq(this)">Como funciona o suporte?</div>
+        <div class="faq-resposta">O suporte é feito via WhatsApp. Dentro do app você encontra o botão "Precisa de ajuda? Fale conosco" que abre diretamente o contato.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-pergunta" onclick="toggleFaq(this)">Posso trocar de plano depois?</div>
+        <div class="faq-resposta">Sim! Dentro do app, na seção "Minha Assinatura", você encontra todos os planos disponíveis e pode trocar quando quiser.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <div class="container" style="text-align:center">
+    <div class="section-label reveal" style="justify-content:center;display:flex">Pronto para começar?</div>
+    <h2 class="section-title reveal">Organize suas finanças<br><em>hoje mesmo</em></h2>
+    <p class="section-desc reveal" style="margin:0 auto 2rem">Mais de 5 minutos perdidos procurando um extrato ou tentando separar o que é do negócio e o que é pessoal — isso acaba agora.</p>
+    <a href="#planos" class="btn-primary reveal" style="margin:0 auto;display:inline-flex">🚀 Escolher meu plano</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">MEI <span>Financeiro</span></div>
+  <div class="footer-text">
+    CNPJ e CPF sob controle — tudo em um lugar.<br>
+    Desenvolvido por <strong>JZ Zenitth Solutions</strong> · CNPJ 34.172.968/0001-17<br>
+    <span style="font-size:.72rem;margin-top:.3rem;display:block">© 2026 MEI Financeiro. Todos os direitos reservados.</span>
+  </div>
+</footer>
+
+<script>
+  // FAQ toggle
+  function toggleFaq(el) {
+    el.classList.toggle('open');
+    el.nextElementSibling.classList.toggle('open');
+  }
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
